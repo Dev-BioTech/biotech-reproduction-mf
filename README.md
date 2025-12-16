@@ -1,169 +1,89 @@
-# 🐣 BioTech Reproduction - Gestión Reproductiva
+# 🧬 BioTech Reproduction Microfrontend
 
-Módulo de control y seguimiento de reproducción animal.
+<div align="center">
 
-## 🚀 Características
+  <img src="https://biotech-shell.vercel.app/BioTech.webp" alt="BioTech Logo" width="200" />
 
-- **Ciclos reproductivos**: Control de celo e inseminación
-- **Seguimiento de gestación**: Monitoreo de preñez
-- **Registro de partos**: Historial de nacimientos
-- **Genealogía**: Árbol familiar
-- **Planificación**: Calendario reproductivo
-- **Estadísticas**: KPIs reproductivos
-- **Alertas**: Eventos importantes
+![Reproduction Banner](https://capsule-render.vercel.app/api?type=waving&color=ec4899&height=120&section=header&text=Reproduction&fontSize=70&animation=fadeIn&fontAlignY=40)
 
-## 🛠️ Tecnologías
+  <br />
 
-- React 18
-- Vite + Module Federation
-- React Hook Form + Yup
-- Axios
-- Zustand
-- Tailwind CSS
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-## 📦 Instalación
+  <br />
 
-```bash
-npm install
-npm run dev  # Puerto 5005
-```
+  <a href="https://biotech-shell.vercel.app/">
+    <img src="https://img.shields.io/badge/🚀_Live_App-Access_Platform-ec4899?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" />
+  </a>
+  <a href="https://github.com/Nikotastic/BioTech-Backend">
+    <img src="https://img.shields.io/badge/🔗_Backend_Repo-View_Code-22c55e?style=for-the-badge&logo=github&logoColor=white" alt="Backend Repo" />
+  </a>
 
-## 🔌 Componentes Expuestos
+</div>
 
-```javascript
-// Ciclos reproductivos
-import('reproductionMF/ReproductionCycles')
+<br />
 
-// Seguimiento de preñez
-import('reproductionMF/PregnancyTracking')
+## 📋 Overview
 
-// Registro de partos
-import('reproductionMF/BirthRegistry')
+The **Reproduction Microfrontend** manages the herd's future. Integrated into the [Shell Application](https://biotech-shell.vercel.app/), it provides tools for tracking cycles, pregnancies, and genetic lines.
 
-// Store
-import('reproductionMF/ReproductionStore')
-```
+---
 
-## 📁 Estructura
+## ✨ Features
 
-```
-src/
-├── features/
-│   ├── reproduction-cycles/
-│   │   ├── components/
-│   │   │   └── ReproductionCycles.jsx
-│   │   ├── hooks/
-│   │   └── services/
-│   ├── pregnancy-tracking/
-│   │   ├── components/
-│   │   └── services/
-│   └── birth-registry/
-│       ├── components/
-│       ├── validations/
-│       └── services/
-├── shared/
-│   ├── store/
-│   │   └── reproductionStore.js
-│   ├── constants/
-│   │   └── reproductionConstants.js
-│   └── utils/
-└── App.jsx
-```
+- **🔄 Cycle Tracking**: Monitor heat cycles and insemination windows.
+- **🤰 Pregnancy**: Track gestation progress and expected calving dates.
+- **👶 Birth Registry**: Record new births and link to parents (Lineage).
+- **🔬 Artificial Insemination**: Logs for AI procedures.
 
-## 💕 Estados Reproductivos
+---
 
-```javascript
-export const REPRODUCTION_STATUS = {
-  HEAT: 'En Celo',
-  INSEMINATED: 'Inseminada',
-  PREGNANT: 'Preñada',
-  CALVING: 'En Parto',
-  POSTPARTUM: 'Postparto',
-  OPEN: 'Vacía'
-}
-```
+## 🛠️ Tech Stack
 
-## 🧬 Métodos de Inseminación
+- **Framework**: React 19
+- **Build Tool**: Vite
+- **Styling**: TailwindCSS
+- **State**: Zustand
 
-```javascript
-export const INSEMINATION_METHODS = {
-  NATURAL: 'Monta Natural',
-  ARTIFICIAL: 'Inseminación Artificial',
-  EMBRYO_TRANSFER: 'Transferencia de Embriones'
-}
-```
+---
 
-## 🌍 API Endpoints
+## 🚀 Getting Started
 
-```javascript
-GET    /api/reproduction/cycles        // Ciclos
-POST   /api/reproduction/cycles        // Registrar ciclo
-GET    /api/reproduction/pregnancies   // Gestaciones
-POST   /api/reproduction/pregnancies   // Nueva gestación
-GET    /api/reproduction/births        // Partos
-POST   /api/reproduction/births        // Registrar parto
-GET    /api/reproduction/stats         // Estadísticas
-```
+1.  **Clone & Install**
 
-## 🤰 Control de Gestación
+    ```bash
+    git clone https://github.com/Nikotastic/biotech-reproduction-mf.git
+    npm install
+    ```
 
-```typescript
-interface Pregnancy {
-  id: number
-  animalId: number
-  inseminationDate: Date
-  expectedBirthDate: Date
-  daysPregnant: number
-  stage: 'Primer Trimestre' | 'Segundo Trimestre' | 'Tercer Trimestre'
-  inseminationMethod: string
-  bullId?: number
-  ultrasound: [
-    {
-      date: Date
-      result: string
-      veterinarian: string
-    }
-  ]
-  status: string
-}
-```
+2.  **Run Locally**
+    ```bash
+    npm run dev
+    ```
+    Running on: `http://localhost:5005`
 
-## 📊 KPIs Reproductivos
+---
 
-- Tasa de concepción
-- Tasa de preñez
-- Intervalo entre partos
-- Días vacíos promedio
-- Tasa de natalidad
-- Tasa de mortalidad neonatal
+## 🤝 Contributing & Credits
 
-## 📅 Eventos Programados
+<div align="center">
 
-- Detección de celo (21 días)
-- Confirmación de preñez (30-45 días)
-- Ultrasonidos (60, 90, 120 días)
-- Preparación para parto (7 días antes)
-- Secado (60 días antes del parto)
+**Core Architecture & Development**<br>
+Built with ❤️ by [**@Nikotastic**](https://github.com/Nikotastic)
 
-## 🔔 Alertas
+  <br>
 
-```javascript
-// Notificaciones
-- Próximo celo estimado
-- Confirmación de preñez pendiente
-- Parto próximo (7 días)
-- Revisión post-parto (15 días)
-```
+**UX/UI Design & Creative Direction**<br>
+Special thanks to [**@J2rkan**](https://github.com/J2rkan) for the premium design contributions.
 
-## 🚀 Deploy
+</div>
 
-```bash
-npm run build
-vercel --prod
-```
+<br>
 
-## 📞 Contacto
+---
 
-- Email: reproduction@biotech.com
-- Docs: https://docs.biotech.com/reproduction
-```
+<div align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=ec4899&height=100&section=footer" width="100%" />
+</div>
