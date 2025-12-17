@@ -22,11 +22,16 @@ export function ReproductionMonitor() {
     }
   };
 
-  const filteredEvents = events.filter(
-    (e) =>
-      e.animalId?.toString().includes(searchTerm) ||
-      e.eventType?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const safeEvents = Array.isArray(events) ? events : [];
+
+  const filteredEvents = safeEvents.filter((e) => {
+    const term = searchTerm.toLowerCase();
+    const idStr = String(e.animalId || "");
+    const typeStr = String(e.eventType || "");
+    return (
+      idStr.toLowerCase().includes(term) || typeStr.toLowerCase().includes(term)
+    );
+  });
 
   return (
     <div className="space-y-6">
@@ -81,7 +86,7 @@ export function ReproductionMonitor() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredEvents.map((event) => (
             <motion.div
-              key={event.id}
+              key={String(event.id || Math.random())}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               className="bg-white p-6 rounded-2xl shadow-md border-l-4 border-pink-500 flex flex-col justify-between hover:shadow-lg transition-all"
@@ -89,26 +94,28 @@ export function ReproductionMonitor() {
               <div>
                 <div className="flex justify-between items-start mb-4">
                   <span className="bg-pink-50 text-pink-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-                    {event.eventType}
+                    {String(event.eventType || "Evento")}
                   </span>
                   <span className="text-gray-400 text-sm flex items-center gap-1">
                     <Calendar className="w-3 h-3" />{" "}
-                    {new Date(event.eventDate).toLocaleDateString()}
+                    {event.eventDate
+                      ? new Date(event.eventDate).toLocaleDateString()
+                      : "N/A"}
                   </span>
                 </div>
 
                 <h3 className="text-xl font-bold text-gray-800 mb-1">
-                  Animal #{event.animalId}
+                  Animal #{String(event.animalId || "?")}
                 </h3>
                 {event.notes && (
                   <p className="text-gray-500 text-sm mb-4 line-clamp-2">
-                    {event.notes}
+                    {String(event.notes)}
                   </p>
                 )}
 
                 {event.technician && (
                   <div className="text-xs text-gray-400 mt-2">
-                    Tec: {event.technician}
+                    Tec: {String(event.technician)}
                   </div>
                 )}
               </div>

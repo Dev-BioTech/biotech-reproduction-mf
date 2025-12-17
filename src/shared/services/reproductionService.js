@@ -72,14 +72,13 @@ export const reproductionService = {
     }
   },
 
-  // Cancel (soft delete) a reproduction event
+  // DELETE /api/v1/Reproduction/{id} - Cancel/Delete a reproduction event
   cancelEvent: async (id) => {
     try {
-      // PUT /api/v1/Reproduction/{id}/cancel
-      const response = await apiClient.put(`/v1/Reproduction/${id}/cancel`);
+      const response = await apiClient.delete(`/v1/Reproduction/${id}`);
       return response.data;
     } catch (error) {
-      console.error(`Error cancelling reproduction event ${id}:`, error);
+      console.error(`Error deleting reproduction event ${id}:`, error);
       throw error;
     }
   },
