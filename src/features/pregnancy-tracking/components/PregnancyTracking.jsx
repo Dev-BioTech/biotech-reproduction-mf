@@ -2,11 +2,10 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { useReproductionStore } from "@/shared/store/reproductionStore";
 import { Calendar, Heart, Activity, AlertCircle } from "lucide-react";
-import { useToastStore } from "@/shared/store/toastStore";
+import alertService from "@/shared/utils/alertService";
 
 export default function PregnancyTracking() {
   const { pregnancies, setPregnancies } = useReproductionStore();
-  const { addToast } = useToastStore();
 
   // Mock data initialization if store is empty
   useState(() => {
@@ -46,7 +45,7 @@ export default function PregnancyTracking() {
   };
 
   const handleUpdatedCheckup = () => {
-    addToast("Fecha de chequeo actualizada correctamente", "success");
+    alertService.success("Fecha de chequeo actualizada correctamente", "Éxito");
   };
 
   return (
@@ -57,7 +56,10 @@ export default function PregnancyTracking() {
         </h1>
         <button
           onClick={() =>
-            addToast("Funcionalidad de exportación en desarrollo", "info")
+            alertService.info(
+              "Funcionalidad de exportación en desarrollo",
+              "En Desarrollo"
+            )
           }
           className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 flex items-center gap-2"
         >
@@ -137,7 +139,10 @@ export default function PregnancyTracking() {
                 </button>
                 <button
                   onClick={() =>
-                    addToast(`Detalles de ${preg.animal} visualizados`, "info")
+                    alertService.info(
+                      `Detalles de ${preg.animal} visualizados`,
+                      "Información"
+                    )
                   }
                   className="text-sm text-pink-600 hover:text-pink-700 font-medium flex items-center gap-1"
                 >
@@ -154,7 +159,10 @@ export default function PregnancyTracking() {
           animate={{ opacity: 1, y: 0 }}
           className="bg-gray-50 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center p-6 cursor-pointer hover:border-pink-300 hover:bg-pink-50 transition-all group"
           onClick={() =>
-            addToast("Formulario de registro en construcción", "info")
+            alertService.info(
+              "Formulario de registro en construcción",
+              "En Desarrollo"
+            )
           }
         >
           <div className="p-4 bg-white rounded-full shadow-sm mb-4 group-hover:scale-110 transition-transform">

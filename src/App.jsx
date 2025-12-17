@@ -3,7 +3,7 @@ import { Layout } from "@/layout/components/Layout";
 import { ReproductionMonitor } from "./features/reproduction-monitor/components/ReproductionMonitor";
 import PregnancyTracking from "./features/pregnancy-tracking/components/PregnancyTracking";
 import BirthRegistry from "./features/birth-registry/components/BirthRegistry";
-import { ToastContainer } from "./shared/components/ui/ToastContainer";
+
 import { Activity, Baby, Heart, ClipboardList } from "lucide-react";
 import "./App.css";
 
@@ -74,8 +74,6 @@ function App() {
             {activeTab === "pregnancy" && <PregnancyTracking />}
             {activeTab === "births" && <BirthRegistry />}
           </div>
-
-          <ToastContainer />
         </div>
       </div>
     </Layout>

@@ -8,7 +8,7 @@ import {
 } from "@/shared/constants/reproductionConstants";
 import { ReproductionCalendar } from "./ReproductionCalendar";
 import { useReproductionStore } from "@/shared/store/reproductionStore";
-import { useToastStore } from "@/shared/store/toastStore";
+import alertService from "@/shared/utils/alertService";
 
 export default function ReproductionCycles() {
   const [filter, setFilter] = useState("all");
@@ -16,7 +16,7 @@ export default function ReproductionCycles() {
   const [showModal, setShowModal] = useState(false);
 
   const { cycles, setCycles } = useReproductionStore();
-  const { addToast } = useToastStore();
+
   const {
     register,
     handleSubmit,
@@ -68,7 +68,10 @@ export default function ReproductionCycles() {
     };
 
     setCycles([newCycle, ...cycles]);
-    addToast("Evento reproductivo registrado correctamente", "success");
+    alertService.success(
+      "Evento reproductivo registrado correctamente",
+      "Éxito"
+    );
     reset();
     setShowModal(false);
   };
