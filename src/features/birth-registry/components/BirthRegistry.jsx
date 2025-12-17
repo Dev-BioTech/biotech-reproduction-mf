@@ -2,12 +2,12 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { useReproductionStore } from "@/shared/store/reproductionStore";
 import { Baby, Weight, Ruler, Calendar, Check } from "lucide-react";
-import { useToastStore } from "@/shared/store/toastStore";
+import alertService from "@/shared/utils/alertService";
 import { useForm } from "react-hook-form";
 
 export default function BirthRegistry() {
   const { births, setBirths } = useReproductionStore();
-  const { addToast } = useToastStore();
+
   const {
     register,
     handleSubmit,
@@ -49,7 +49,7 @@ export default function BirthRegistry() {
       ...data,
     };
     setBirths([newBirth, ...births]);
-    addToast("Nacimiento registrado exitosamente", "success");
+    alertService.success("Nacimiento registrado exitosamente", "Éxito");
     reset();
     setShowForm(false);
   };

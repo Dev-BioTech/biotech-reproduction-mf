@@ -3,22 +3,22 @@ import { Plus, Search, Calendar, Heart, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useReproductionEvents } from "../hooks/useReproductionEvents";
 import { ReproductionEventForm } from "./ReproductionEventForm";
-import { useToastStore } from "../../../shared/store/toastStore";
+import alertService from "../../../shared/utils/alertService";
 
 export function ReproductionMonitor() {
   const { events, loading, error, createEvent, cancelEvent, farmId } =
     useReproductionEvents();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const addToast = useToastStore((state) => state.addToast);
+
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleCreate = async (data) => {
     try {
       await createEvent(data);
-      addToast("Evento registrado correctamente", "success");
+      alertService.success("Evento registrado correctamente", "Éxito");
       setIsModalOpen(false);
     } catch (e) {
-      addToast("Error al registrar evento", "error");
+      alertService.error("Error al registrar evento", "Error");
     }
   };
 
@@ -122,9 +122,27 @@ export function ReproductionMonitor() {
 
               <div className="mt-4 pt-4 border-t border-gray-50 flex justify-end">
                 <button
-                  onClick={() => {
-                    if (window.confirm("¿Cancelar evento?"))
-                      cancelEvent(event.id);
+                  onClick={async () => {
+                    const result = await alertService.confirm(
+                      "¿Estás seguro de cancelar este evento?",
+                      "Confirmar Acción",
+                      "Sí, cancelar",
+                      "No"
+                    );
+                    if (result.isConfirmed) {
+                      try {
+                        await cancelEvent(event.id);
+                        alertService.success(
+                          "Evento cancelado correctamente",
+                          "Cancelado"
+                        );
+                      } catch (e) {
+                        alertService.error(
+                          "Error al cancelar el evento",
+                          "Error"
+                        );
+                      }
+                    }
                   }}
                   className="text-gray-400 hover:text-red-500 p-2 rounded-lg hover:bg-red-50 transition-colors"
                   title="Cancelar Evento"
