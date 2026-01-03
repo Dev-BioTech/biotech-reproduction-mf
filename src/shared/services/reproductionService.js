@@ -1,11 +1,11 @@
-import apiClient from "../utils/apiClient";
+import apiService from "@shared-services/ApiService";
 
 export const reproductionService = {
   // Create a new reproduction event
   createEvent: async (eventData) => {
     try {
       // POST /api/v1/Reproduction
-      const response = await apiClient.post("/v1/Reproduction", eventData);
+      const response = await apiService.post("/v1/Reproduction", eventData);
       return response.data;
     } catch (error) {
       console.error("Error creating reproduction event:", error);
@@ -17,7 +17,7 @@ export const reproductionService = {
   getEventsByFarm: async (farmId) => {
     try {
       // GET /api/v1/Reproduction/farm/{farmId}
-      const response = await apiClient.get(`/v1/Reproduction/farm/${farmId}`);
+      const response = await apiService.get(`/v1/Reproduction/farm/${farmId}`);
       return response.data;
     } catch (error) {
       console.error(
@@ -32,7 +32,7 @@ export const reproductionService = {
   getEventsByAnimal: async (animalId) => {
     try {
       // GET /api/v1/Reproduction/animal/{animalId}
-      const response = await apiClient.get(
+      const response = await apiService.get(
         `/v1/Reproduction/animal/${animalId}`
       );
       return response.data;
@@ -49,7 +49,7 @@ export const reproductionService = {
   getEventsByType: async (type) => {
     try {
       // GET /api/v1/Reproduction/type/{type}
-      const response = await apiClient.get(`/v1/Reproduction/type/${type}`);
+      const response = await apiService.get(`/v1/Reproduction/type/${type}`);
       return response.data;
     } catch (error) {
       console.error(
@@ -64,7 +64,7 @@ export const reproductionService = {
   getEventById: async (id) => {
     try {
       // GET /api/v1/Reproduction/{id}
-      const response = await apiClient.get(`/v1/Reproduction/${id}`);
+      const response = await apiService.get(`/v1/Reproduction/${id}`);
       return response.data;
     } catch (error) {
       console.error(`Error fetching reproduction event ${id}:`, error);
@@ -75,7 +75,7 @@ export const reproductionService = {
   // DELETE /api/v1/Reproduction/{id} - Cancel/Delete a reproduction event
   cancelEvent: async (id) => {
     try {
-      const response = await apiClient.delete(`/v1/Reproduction/${id}`);
+      const response = await apiService.delete(`/v1/Reproduction/${id}`);
       return response.data;
     } catch (error) {
       console.error(`Error deleting reproduction event ${id}:`, error);

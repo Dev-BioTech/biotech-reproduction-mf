@@ -27,15 +27,23 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./src"),
       "@shared": path.resolve(__dirname, "./src/shared"),
+      // Alias to access shared services from Shell
+      "@shared-services": path.resolve(
+        __dirname,
+        "../biotech-shell/src/shared/services"
+      ),
+    },
+  },
+  server: {
+    port: 5005,
+    cors: true,
+    fs: {
+      allow: [".."],
     },
   },
   build: {
     target: "esnext",
     minify: false,
     cssCodeSplit: false,
-  },
-  server: {
-    port: 5005,
-    cors: true,
   },
 });
