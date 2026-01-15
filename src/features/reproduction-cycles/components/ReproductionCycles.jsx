@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Calendar, List, X, Save } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useForm } from "react-hook-form";
@@ -9,6 +9,7 @@ import {
 import { ReproductionCalendar } from "./ReproductionCalendar";
 import { useReproductionStore } from "@/shared/store/reproductionStore";
 import alertService from "@/shared/utils/alertService";
+import { reproductionService } from "@/shared/services/reproductionService";
 
 export default function ReproductionCycles() {
   const [filter, setFilter] = useState("all");
@@ -24,40 +25,33 @@ export default function ReproductionCycles() {
     formState: { errors },
   } = useForm();
 
-  // Initialize mock data if empty
-  useState(() => {
-    if (cycles.length === 0) {
-      setCycles([
-        {
-          id: 1,
-          animal: "Vaca #001",
-          status: "Preñada",
-          lastHeat: "2024-10-15",
-          inseminationDate: "2024-10-16",
-          dueDate: "2025-07-15",
-          daysPregnant: 60,
-        },
-        {
-          id: 2,
-          animal: "Vaca #005",
-          status: "En Celo",
-          lastHeat: "2024-12-10",
-          inseminationDate: null,
-          dueDate: null,
-          daysPregnant: 0,
-        },
-        {
-          id: 3,
-          animal: "Vaca #012",
-          status: "Inseminada",
-          lastHeat: "2024-11-20",
-          inseminationDate: "2024-11-21",
-          dueDate: "2025-08-20",
-          daysPregnant: 21,
-        },
-      ]);
-    }
-  });
+  // Load data from service
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const authStorage = localStorage.getItem("auth-storage");
+        let farmId = 1;
+        if (authStorage) {
+          try {
+            const parsed = JSON.parse(authStorage);
+            if (parsed?.state?.selectedFarm?.id) {
+              farmId = parsed.state.selectedFarm.id;
+            }
+          } catch (e) {
+            console.error("Error parsing auth storage", e);
+          }
+        }
+
+        const data = await reproductionService.getCyclesByFarm(farmId);
+        setCycles(data);
+      } catch (error) {
+        console.error("Error loading cycles:", error);
+        alertService.error("Error al cargar ciclos reproductivos");
+      }
+    };
+
+    loadData();
+  }, [setCycles]);
 
   const onSubmit = (data) => {
     const newCycle = {
@@ -267,15 +261,14 @@ export default function ReproductionCycles() {
                   </td>
                   <td className="px-6 py-4">
                     <span
-                      className={`px-3 py-1 text-xs font-medium rounded-full ${
-                        cycle.status === "Preñada"
+                      className={`px-3 py-1 text-xs font-medium rounded-full ${cycle.status === "Preñada"
                           ? "bg-blue-100 text-blue-800"
                           : cycle.status === "En Celo"
-                          ? "bg-pink-100 text-pink-800"
-                          : cycle.status === "Inseminada"
-                          ? "bg-purple-100 text-purple-800"
-                          : "bg-gray-100 text-gray-800"
-                      }`}
+                            ? "bg-pink-100 text-pink-800"
+                            : cycle.status === "Inseminada"
+                              ? "bg-purple-100 text-purple-800"
+                              : "bg-gray-100 text-gray-800"
+                        }`}
                     >
                       {cycle.status}
                     </span>
@@ -286,8 +279,8 @@ export default function ReproductionCycles() {
                   <td className="px-6 py-4 text-sm text-gray-600">
                     {cycle.inseminationDate
                       ? new Date(cycle.inseminationDate).toLocaleDateString(
-                          "es-ES"
-                        )
+                        "es-ES"
+                      )
                       : "-"}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-900 font-medium">

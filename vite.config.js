@@ -40,6 +40,25 @@ export default defineConfig({
     fs: {
       allow: [".."],
     },
+    proxy: {
+      "/api": {
+        target: "https://api-gateway-bio-tech.up.railway.app",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
+  preview: {
+    port: 5005,
+    strictPort: true,
+    cors: true,
+    proxy: {
+      "/api": {
+        target: "https://api-gateway-bio-tech.up.railway.app",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
   build: {
     target: "esnext",

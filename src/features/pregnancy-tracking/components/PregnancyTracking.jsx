@@ -1,35 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { useReproductionStore } from "@/shared/store/reproductionStore";
 import { Calendar, Heart, Activity, AlertCircle } from "lucide-react";
 import alertService from "@/shared/utils/alertService";
+import { reproductionService } from "@/shared/services/reproductionService";
 
 export default function PregnancyTracking() {
   const { pregnancies, setPregnancies } = useReproductionStore();
 
-  // Mock data initialization if store is empty
-  useState(() => {
-    if (pregnancies.length === 0) {
-      setPregnancies([
-        {
-          id: 1,
-          animal: "Vaca #001",
-          conceptionDate: "2024-10-16",
-          daysPregnant: 60,
-          status: "Saludable",
-          nextCheckup: "2025-01-15",
-        },
-        {
-          id: 2,
-          animal: "Vaca #012",
-          conceptionDate: "2024-11-21",
-          daysPregnant: 24,
-          status: "Riesgo Bajo",
-          nextCheckup: "2024-12-21",
-        },
-      ]);
-    }
-  });
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const authStorage = localStorage.getItem("auth-storage");
+        let farmId = 1; // Default
+        if (authStorage) {
+          try {
+            const parsed = JSON.parse(authStorage);
+            if (parsed?.state?.selectedFarm?.id) {
+              farmId = parsed.state.selectedFarm.id;
+            }
+          } catch (e) {
+            console.error("Error parsing auth storage", e);
+          }
+        }
+
+        const data = await reproductionService.getPregnanciesByFarm(farmId);
+        setPregnancies(data);
+      } catch (error) {
+        console.error("Error loading pregnancies:", error);
+        alertService.error("Error al cargar datos de gestación");
+      }
+    };
+
+    loadData();
+  }, [setPregnancies]);
 
   const getHealthStatusColor = (status) => {
     switch (status) {

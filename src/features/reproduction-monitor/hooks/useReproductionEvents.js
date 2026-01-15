@@ -12,22 +12,30 @@ export const useReproductionEvents = () => {
   useEffect(() => {
     // Attempt to get farmId from localStorage, similar to other MFs
     const authStorage = localStorage.getItem("auth-storage");
+    let foundId = 1; // Default to 1 (Mock)
     if (authStorage) {
       try {
         const parsed = JSON.parse(authStorage);
-        setFarmId(parsed?.state?.selectedFarm?.id);
+        if (parsed?.state?.selectedFarm?.id) {
+          foundId = parsed.state.selectedFarm.id;
+        }
       } catch (e) {
         console.error("Error parsing auth storage", e);
       }
     }
+    setFarmId(foundId);
   }, []);
 
   const fetchEvents = async () => {
-    if (!farmId) return;
+    if (!farmId) {
+      return;
+    }
 
     setLoading(true);
+    setError(null); // Clear previous errors
     try {
       const data = await reproductionService.getEventsByFarm(farmId);
+      
       setEvents(data);
       setItems(data); // Sync items
       setError(null);

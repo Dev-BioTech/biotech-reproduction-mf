@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { useReproductionStore } from "@/shared/store/reproductionStore";
 import { Baby, Weight, Ruler, Calendar, Check } from "lucide-react";
 import alertService from "@/shared/utils/alertService";
 import { useForm } from "react-hook-form";
+import { reproductionService } from "@/shared/services/reproductionService";
 
 export default function BirthRegistry() {
   const { births, setBirths } = useReproductionStore();
@@ -17,31 +18,33 @@ export default function BirthRegistry() {
 
   const [showForm, setShowForm] = useState(false);
 
-  // Mock data initialization
-  useState(() => {
-    if (births.length === 0) {
-      setBirths([
-        {
-          id: 1,
-          mother: "Vaca #001",
-          calfId: "BEC-001",
-          birthDate: "2024-12-01",
-          weight: 35,
-          gender: "Macho",
-          notes: "Parto normal",
-        },
-        {
-          id: 2,
-          mother: "Vaca #004",
-          calfId: "BEC-002",
-          birthDate: "2024-12-10",
-          weight: 32,
-          gender: "Hembra",
-          notes: "Asistido",
-        },
-      ]);
-    }
-  });
+  // Load data from service
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const authStorage = localStorage.getItem("auth-storage");
+        let farmId = 1;
+        if (authStorage) {
+          try {
+            const parsed = JSON.parse(authStorage);
+            if (parsed?.state?.selectedFarm?.id) {
+              farmId = parsed.state.selectedFarm.id;
+            }
+          } catch (e) {
+            console.error("Error parsing auth storage", e);
+          }
+        }
+
+        const data = await reproductionService.getBirthsByFarm(farmId);
+        setBirths(data);
+      } catch (error) {
+        console.error("Error loading births:", error);
+        alertService.error("Error al cargar nacimientos");
+      }
+    };
+
+    loadData();
+  }, [setBirths]);
 
   const onSubmit = (data) => {
     const newBirth = {
@@ -179,11 +182,10 @@ export default function BirthRegistry() {
           >
             <div className="flex items-center gap-4 w-full md:w-auto">
               <div
-                className={`p-3 rounded-full flex-shrink-0 ${
-                  birth.gender === "Hembra"
+                className={`p-3 rounded-full flex-shrink-0 ${birth.gender === "Hembra"
                     ? "bg-pink-100 text-pink-600"
                     : "bg-blue-100 text-blue-600"
-                }`}
+                  }`}
               >
                 <Baby className="w-6 h-6" />
               </div>

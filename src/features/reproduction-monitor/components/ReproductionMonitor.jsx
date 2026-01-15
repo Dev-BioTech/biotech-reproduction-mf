@@ -8,6 +8,7 @@ import alertService from "../../../shared/utils/alertService";
 export function ReproductionMonitor() {
   const { events, loading, error, createEvent, cancelEvent, farmId } =
     useReproductionEvents();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -176,3 +177,5 @@ export function ReproductionMonitor() {
     </div>
   );
 }
+
+export default ReproductionMonitor;
