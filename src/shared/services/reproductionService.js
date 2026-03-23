@@ -5,20 +5,20 @@ import apiClient from "../utils/apiClient";
  * All calls go to POST/GET/PUT /api/v1/Reproduction
  */
 export const reproductionService = {
-  // ── POST /api/v1/Reproduction ──────────────────────────────────────────
+  // ── POST /api/v1/reproduction ──────────────────────────────────────────
   createEvent: async (eventData) => {
-    const response = await apiClient.post("/v1/Reproduction", eventData);
+    const response = await apiClient.post("/v1/reproduction", eventData);
     return response.data;
   },
 
-  // ── GET /api/v1/Reproduction/{id} ─────────────────────────────────────
+  // ── GET /api/v1/reproduction/{id} ─────────────────────────────────────
   getEventById: async (id) => {
-    const response = await apiClient.get(`/v1/Reproduction/${id}`);
+    const response = await apiClient.get(`/v1/reproduction/${id}`);
     return response.data;
   },
 
-  // ── GET /api/v1/Reproduction/farm/{farmId} ────────────────────────────
-  // Optional: fromDate, toDate, page, pageSize
+  // ── GET /api/v1/reproduction/farm ────────────────────────────
+  // Uses context from X-Farm-Id header instead of route param
   getEventsByFarm: async (farmId, params = {}) => {
     const query = new URLSearchParams();
     if (params.fromDate) query.append("fromDate", params.fromDate);
@@ -27,12 +27,12 @@ export const reproductionService = {
     if (params.pageSize) query.append("pageSize", params.pageSize);
     const qs = query.toString();
     const response = await apiClient.get(
-      `/v1/Reproduction/farm/${farmId}${qs ? `?${qs}` : ""}`,
+      `/v1/reproduction/farm${qs ? `?${qs}` : ""}`,
     );
     return response.data;
   },
 
-  // ── GET /api/v1/Reproduction/farm (context from JWT) ──────────────────
+  // ── GET /api/v1/reproduction/farm (context from JWT) ──────────────────
   getEventsByFarmContext: async (params = {}) => {
     const query = new URLSearchParams();
     if (params.fromDate) query.append("fromDate", params.fromDate);
@@ -41,81 +41,83 @@ export const reproductionService = {
     if (params.pageSize) query.append("pageSize", params.pageSize);
     const qs = query.toString();
     const response = await apiClient.get(
-      `/v1/Reproduction/farm${qs ? `?${qs}` : ""}`,
+      `/v1/reproduction/farm${qs ? `?${qs}` : ""}`,
     );
     return response.data;
   },
 
-  // ── GET /api/v1/Reproduction/animal/{animalId} ────────────────────────
+  // ── GET /api/v1/reproduction/animal/{animalId} ────────────────────────
   getEventsByAnimal: async (animalId, params = {}) => {
     const query = new URLSearchParams();
     if (params.page) query.append("page", params.page);
     if (params.pageSize) query.append("pageSize", params.pageSize);
     const qs = query.toString();
     const response = await apiClient.get(
-      `/v1/Reproduction/animal/${animalId}${qs ? `?${qs}` : ""}`,
+      `/v1/reproduction/animal/${animalId}${qs ? `?${qs}` : ""}`,
     );
     return response.data;
   },
 
-  // ── GET /api/v1/Reproduction/type/{type} ──────────────────────────────
+  // ── GET /api/v1/reproduction/type/{type} ──────────────────────────────
   getEventsByType: async (type, params = {}) => {
     const query = new URLSearchParams();
     if (params.page) query.append("page", params.page);
     if (params.pageSize) query.append("pageSize", params.pageSize);
     const qs = query.toString();
     const response = await apiClient.get(
-      `/v1/Reproduction/type/${type}${qs ? `?${qs}` : ""}`,
+      `/v1/reproduction/type/${type}${qs ? `?${qs}` : ""}`,
     );
     return response.data;
   },
 
-  // ── PUT /api/v1/Reproduction/{id}/cancel ──────────────────────────────
+  // ── PUT /api/v1/reproduction/{id}/cancel ──────────────────────────────
   cancelEvent: async (id) => {
-    const response = await apiClient.put(`/v1/Reproduction/${id}/cancel`);
+    const response = await apiClient.put(`/v1/reproduction/${id}/cancel`);
     return response.data;
   },
 
-  // ── PENDIENTE BACKEND: GET /api/v1/Reproduction/pregnancies/farm/{farmId} ──
-  // Used by PregnancyTracking.jsx — endpoint NOT yet implemented in backend.
-  // Will return empty list gracefully until backend adds it.
+  // ── GET /api/v1/reproduction/pregnancies/farm/{farmId} ──
+  // Used by PregnancyTracking.jsx
   getPregnanciesByFarm: async (farmId) => {
     try {
       const response = await apiClient.get(
-        `/v1/Reproduction/pregnancies/farm/${farmId}`,
+        `/v1/reproduction/pregnancies/farm/${farmId}`,
       );
       const data = response.data;
       return Array.isArray(data) ? data : (data?.data ?? data?.items ?? []);
     } catch (error) {
       console.warn(
-        "GET /v1/Reproduction/pregnancies/farm — endpoint not yet available:",
+        "GET /v1/reproduction/pregnancies/farm — endpoint not yet available:",
         error?.response?.status,
       );
       return [];
     }
   },
 
-  // ── PENDIENTE BACKEND: GET /api/v1/Reproduction/births/farm/{farmId} ──
-  // Used by BirthRegistry.jsx — endpoint NOT yet implemented in backend.
+  // ── GET /api/v1/reproduction/births/farm/{farmId} ──
+  // Used by BirthRegistry.jsx
   getBirthsByFarm: async (farmId) => {
     try {
       const response = await apiClient.get(
-        `/v1/Reproduction/births/farm/${farmId}`,
+        `/v1/reproduction/births/farm/${farmId}`,
       );
       const data = response.data;
       return Array.isArray(data) ? data : (data?.data ?? data?.items ?? []);
     } catch (error) {
       console.warn(
-        "GET /v1/Reproduction/births/farm — endpoint not yet available:",
+        "GET /v1/reproduction/births/farm — endpoint not yet available:",
         error?.response?.status,
       );
       return [];
     }
   },
 
-  // ── PENDIENTE BACKEND: POST /api/v1/Reproduction/births ──────────────
+  // ── POST /api/v1/reproduction/register-birth ──────────────
   postBirth: async (birthData) => {
-    const response = await apiClient.post("/v1/Reproduction/births", birthData);
+    const response = await apiClient.post(
+      "/v1/reproduction/register-birth",
+      birthData,
+    );
     return response.data;
   },
 };
