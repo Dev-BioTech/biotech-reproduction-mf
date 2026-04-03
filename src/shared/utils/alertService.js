@@ -138,25 +138,13 @@ export const closeLoading = () => {
   Swal.close();
 };
 
-// Toast notification 
-export const showToast = (message, type = "success", position = "top-end") => {
-  const Toast = Swal.mixin({
-    toast: true,
-    position,
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-      toast.addEventListener("mouseenter", Swal.stopTimer);
-      toast.addEventListener("mouseleave", Swal.resumeTimer);
-    },
-  });
-
-  return Toast.fire({
-    icon: type,
-    title: message,
-    iconColor: alertColors[type] || alertColors.info,
-  });
+// Toast notification - Centralizada en el Shell
+export const showToast = (message, type = "success") => {
+  window.dispatchEvent(
+    new CustomEvent("biotech-toast", {
+      detail: { message, type },
+    })
+  );
 };
 
 // Custom alert
